@@ -1,4 +1,4 @@
-package common;
+package ds.linkedLists;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -106,7 +106,8 @@ public class LRUCache {
         tail = nextNode;
         tail.prev = null;
     }
-    
+
+    // Doubly-Linked List Node is used for LRU
     private class Node<E> {
     	E key;
         E value;

@@ -1,5 +1,8 @@
 package ds.arrays;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ArrayTests {
 
     public static void main(String[] args) {
@@ -18,5 +21,28 @@ public class ArrayTests {
 
         nums = new int[]{10, 5, 2, 6};
         System.out.println("subarray prod count    " + slidingWindow.subarrayProductCount(nums, 100));
+
+        ArrayTests tests = new ArrayTests();
+        int[] buildings = {5, 1, 10, 2, 15, 3, 20, 4};
+        System.out.println("buildings with view    " + tests.vantagePoints(buildings));
+    }
+
+    // this is NOT an optimization problem
+    // no local and global result
+    public List<Integer> vantagePoints(int[] heights) {
+        if (heights == null || heights.length == 0) {
+            return null;
+        }
+
+        List<Integer> result = new ArrayList<>();
+        int lastHeight = Integer.MIN_VALUE;
+        for (int height: heights) {
+            if (height > lastHeight) {
+                lastHeight = height;
+                result.add(height);
+            }
+        }
+
+        return result;
     }
 }

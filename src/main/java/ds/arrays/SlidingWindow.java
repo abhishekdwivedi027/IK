@@ -164,30 +164,30 @@ public class SlidingWindow {
             int num = nums[i];
             // don't keep unnecessary elements - smaller than num
             // ideally max and sec max
-            while (!deck.isEmpty() && num > deck.peekLast()) {
-                deck.pollLast();
+            while (!deck.isEmpty() && num > deck.getLast()) {
+                deck.removeLast();
             }
-            deck.add(num);
+            deck.addLast(num);
         }
 
         int resultCount = 0;
-        result[resultCount++] = deck.peek();
+        result[resultCount++] = deck.getFirst();
 
         // slide
         for (int i=k; i<n; i++) {
             int out = nums[i-k];
             // this number may or may not have been in the deck
             // it must be the max (at the head) if it has been there
-            if (out == deck.peek()) {
-                deck.poll();
+            if (out == deck.getFirst()) {
+                deck.removeFirst();
             }
             int in = nums[i];
             // all nums smaller than num must be purged
-            while (!deck.isEmpty() && in > deck.peekLast()) {
-                deck.pollLast();
+            while (!deck.isEmpty() && in > deck.getLast()) {
+                deck.removeLast();
             }
             deck.add(in);
-            result[resultCount++] = deck.peek();
+            result[resultCount++] = deck.getFirst();
         }
 
         return result;

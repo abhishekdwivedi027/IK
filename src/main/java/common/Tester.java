@@ -1,5 +1,7 @@
 package common;
 
+import ds.linkedLists.LRUCache;
+
 public class Tester {
 	
 	public static void main(String[] args) {
