@@ -158,35 +158,40 @@ public class SlidingWindow {
         int n = nums.length;
         int[] result = new int[n-k+1];
 
+        int resultCount = 0;
+
+        // LinkedList is an implementation of List and Deque interface
         Deque<Integer> deck = new LinkedList<>();
+
         // init
         for (int i=0; i<k; i++) {
             int num = nums[i];
-            // don't keep unnecessary elements - smaller than num
-            // ideally max and sec max
+            // don't keep unnecessary elements - smaller than num will be removed from right/tail/last
+            // ideally max and sec max will remain in the deck
             while (!deck.isEmpty() && num > deck.getLast()) {
                 deck.removeLast();
             }
             deck.addLast(num);
         }
 
-        int resultCount = 0;
         result[resultCount++] = deck.getFirst();
 
         // slide
         for (int i=k; i<n; i++) {
             int out = nums[i-k];
             // this number may or may not have been in the deck
-            // it must be the max (at the head) if it has been there
+            // it must be the max (at the left/head/first) if it has been there
             if (out == deck.getFirst()) {
                 deck.removeFirst();
             }
+
             int in = nums[i];
             // all nums smaller than num must be purged
             while (!deck.isEmpty() && in > deck.getLast()) {
                 deck.removeLast();
             }
-            deck.add(in);
+            deck.addLast(in);
+
             result[resultCount++] = deck.getFirst();
         }
 

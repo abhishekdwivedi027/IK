@@ -14,15 +14,20 @@ public class LLTests {
         ListNode node5 = new ListNode(5);
         ListNode node6 = new ListNode(6);
         ListNode node7 = new ListNode(7);
+        ListNode node8 = new ListNode(8);
+        ListNode node9 = new ListNode(9);
         node1.setNext(node2);
         node2.setNext(node3);
         node3.setNext(node4);
         node4.setNext(node5);
         node5.setNext(node6);
         node6.setNext(node7);
-        System.out.println("reverse ---- " + tests.reverse(node1).print());
-        tests.reverse(node7);
-        System.out.println("swap ---- " + tests.swapNodes(node1, 2).print());
+        node7.setNext(node8);
+        node8.setNext(node9);
+        System.out.println("reverse ---- " + tests.reverseIteratively(node1).print());
+        tests.reverseRecursively(node9);
+        System.out.println("reverse blocks ---- " + tests.reverseGroups(node1, 3).print());
+        // System.out.println("swap ---- " + tests.swapNodes(node1, 2).print());
 
     }
 
@@ -115,29 +120,105 @@ public class LLTests {
         return anotherSlow;
     }
 
+    public ListNode reverseIteratively(ListNode head) {
+
+        ListNode prev = null;
+        ListNode current = head;
+        while (current != null) {
+            ListNode next = current.getNext();
+            current.setNext(prev);
+            prev = current;
+            current = next;
+        }
+
+        return prev;
+    }
+
     // 1 -> 3 -> 5 -> 7 -> null
     // 7 -> 5 -> 3 -> 1 -> null
-    private ListNode reversedHead;
-    public ListNode reverse(ListNode head) {
+    public ListNode reverseRecursively(ListNode head) {
         if (head == null) {
             return null;
         }
 
-        reverse(head, null);
+        return reverseRecursively(head, null);
+    }
+
+    private ListNode reverseRecursively(ListNode node, ListNode prev) {
+        if (node == null) {
+            return prev;
+        }
+
+        ListNode head = reverseRecursively(node.getNext(), node);
+
+        node.setNext(prev);
+
+        return head;
+    }
+
+    public ListNode reverseGroups(ListNode head, int k) {
+
+        if (head == null) {
+            return null;
+        }
+
+        if (k == 1) {
+            return head;
+        }
+
+        // will be changed at max once
+        // will not change if k > size(list)
+        ListNode reversedHead = head;
+
+        // we need last node of previous block to link to first node of reversed block
+        ListNode prevTail = null;
+
+        while (head != null) {
+            // this currHead will be used to reverse the block
+            // and will be used as prevTail for the next block
+            ListNode currHead = head;
+
+            ListNode curr = head;
+            // note: k-1
+            for (int i=0; i<k-1; i++) {
+                if (curr == null) {
+                    break;
+                }
+
+                // this will reach end of block
+                curr = curr.getNext();
+            }
+
+            // whether it's partial block or last block
+            if (curr == null) {
+                if (prevTail != null) {
+                    reverseJoin(prevTail, currHead);
+                }
+                break;
+            }
+
+            // one time change
+            if (prevTail == null) {
+                reversedHead = curr;
+            }
+
+            // reverse left block
+            head = curr.getNext();
+            curr.setNext(null);
+            reverseJoin(prevTail, currHead);
+            prevTail = currHead;
+        }
+
         return reversedHead;
     }
 
-    private void reverse(ListNode node, ListNode prev) {
-        if (node == null) {
-            reversedHead = prev;
-            return;
+    private void reverseJoin(ListNode prev, ListNode head) {
+
+        ListNode newHead = reverseRecursively(head);
+
+        if (prev != null) {
+            prev.setNext(newHead);
         }
-
-        reverse(node.getNext(), node);
-
-        // we are only reversing the link
-        // no local return needed
-        node.setNext(prev);
     }
 
     public ListNode swapNodes(ListNode head, Integer k) {

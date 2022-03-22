@@ -1,6 +1,6 @@
 package common;
 
-import ds.linkedLists.LRUCache;
+import ds.custom.LRUCache;
 
 public class Tester {
 	
