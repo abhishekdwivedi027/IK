@@ -104,6 +104,7 @@ public class QuickSort {
 		if (start == kthIndex) {
 			return nums[start];
 		}
+
 		if (end == kthIndex) {
 			return nums[end];
 		}
@@ -128,7 +129,7 @@ public class QuickSort {
 		int white = 0;
 		int blue = chars.length - 1;
 
-		// the middle pointer starts at the left and move rightwards
+		// the middle pointer - white - starts at the left and move rightwards
 		while (red <= white && white <= blue) {
 			if (chars[white] == 'R') {
 				swap(chars, white, red);

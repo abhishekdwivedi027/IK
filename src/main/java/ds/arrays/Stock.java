@@ -1,6 +1,16 @@
-package algo.optimization.dp;
+package ds.arrays;
 
 public class Stock {
+
+    // for lazy manager, ith day is the last day - only selling is possible
+    // globalProfits[i] = max(profit w/o sale on ith day, profit with sale on ith day) - optional sale
+    // profit w/o sale on ith day = globalProfits[i-1]
+    // profit with sale on ith day = localProfits[i] - mandatory sale on day i
+    // localProfits[i] = max(profit when bought on i-1st day, profit when bought earlier)
+    // profit with sale on ith day when bought on i-1st day = prices[i] - prices[i-1] + globalProfits[last_sale_day]
+    // profit with sale on ith day when bought earlier = prices[i] - prices[i-1] + localProfits[i-1]
+    // localProfits[i] = prices[i] - prices[i-1] + max(globalProfits[last_sale_day], localProfits[i-1])
+    // globalProfits[i] = max(globalProfits[i-1], localProfits[i])
 
     public static void main(String[] args) {
         Stock stock = new Stock();
@@ -11,18 +21,10 @@ public class Stock {
         System.out.println("max total profit with cooldown    " + stock.maxTotalProfitWithCooldown(prices));
         prices = new int[]{1, 3, 2, 8, 4, 9};
         System.out.println("max total profit with fee    " + stock.maxTotalProfitWithFee(prices, 2));
-
-        // TODO max area problem
     }
 
     // MAX PROFIT - MAX ONE TRANSACTION
-    // for lazy manager, ith day is the last day - only selling is possible
-    // globalProfit(i) = max(local profit when no selling on ith day, local profit when selling on ith day) - I
-    // local profit when no selling on ith day - globalProfit(i-1)
-    // local profit when selling on ith day = max(profit when buying on prev day, profit when buying on other day)
-    // local profit when buying on prev day --> prices[i] - prices[i-1]
-    // local profit when buying on other day --> local profit when selling on i-1th day - prices[i-1] + prices[i]
-    // local profit when selling on ith day - prices[i] - prices[i-1] + max(0, profit when selling on i-1th day) - II
+
     public int maxProfit(int[] prices) {
         if (prices == null || prices.length < 2) {
             return 0;
@@ -43,13 +45,6 @@ public class Stock {
     }
 
     // MAX PROFIT - ANY NUMBER OF TRANSACTIONS
-    // for lazy manager, ith day is the last day - only selling is possible
-    // globalProfit(i) = max(local profit when no selling on ith day, local profit when selling on ith day) - I
-    // local profit when no selling on ith day - globalProfit(i-1)
-    // local profit when selling on ith day = max(profit when buying on prev day, profit when buying on other day)
-    // local profit when buying on prev day --> prices[i] - prices[i-1] + globalProfit(i-1)
-    // local profit when buying on other day --> local profit when selling on i-1th day - prices[i-1] + prices[i]
-    // local profit when selling on ith day - prices[i] - prices[i-1] + max(0, profit when selling on i-1th day) - II
     public int maxTotalProfit(int[] prices) {
         if (prices == null || prices.length < 2) {
             return 0;
@@ -70,13 +65,7 @@ public class Stock {
     }
 
     // MAX PROFIT - ANY NUMBER OF TRANSACTIONS
-    // for lazy manager, ith day is the last day - only selling is possible
-    // globalProfit(i) = max(local profit when no selling on ith day, local profit when selling on ith day) - I
-    // local profit when no selling on ith day - globalProfit(i-1)
-    // local profit when selling on ith day = max(profit when buying on prev day, profit when buying on other day)
-    // local profit when buying on prev day --> prices[i] - prices[i-1] + globalProfit(i-3)
-    // local profit when buying on other day --> local profit when selling on i-1th day - prices[i-1] + prices[i]
-    // local profit when selling on ith day - prices[i] - prices[i-1] + max(0, profit when selling on i-1th day) - II
+    // last_sale_day when buy was on i-1 = i-3 because of one day cooldown
     public int maxTotalProfitWithCooldown(int[] prices) {
         if (prices == null || prices.length < 2) {
             return 0;
@@ -97,13 +86,8 @@ public class Stock {
     }
 
     // MAX PROFIT - ANY NUMBER OF TRANSACTIONS
-    // for lazy manager, ith day is the last day - only selling is possible
-    // globalProfit(i) = max(local profit when no selling on ith day, local profit when selling on ith day) - I
-    // local profit when no selling on ith day - globalProfit(i-1)
-    // local profit when selling on ith day = max(profit when buying on prev day, profit when buying on other day)
-    // local profit when buying on prev day --> prices[i] - prices[i-1] - fee + globalProfit(i-1)
-    // local profit when buying on other day --> local profit when selling on i-1th day - prices[i-1] + prices[i]
-    // local profit when selling on ith day - prices[i] - prices[i-1] + max(0, profit when selling on i-1th day) - II
+    // profit with sale on ith day when bought on i-1st day = prices[i] - prices[i-1] - fee + globalProfits[last_sale_day]
+    // profit with sale on ith day when bought earlier = prices[i] - prices[i-1] - fee + localProfits[i-1] + fee
     public int maxTotalProfitWithFee(int[] prices, int fee) {
         if (prices == null || prices.length < 2) {
             return 0;

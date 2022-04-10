@@ -10,21 +10,39 @@ public class ArrayTests {
         int[] nums = {1};
         System.out.println("smallest positive missing   " + cycleSort.smallestPositiveMissing(nums));
 
-        SlidingWindow slidingWindow = new SlidingWindow();
+        SlidingWindowFixed slidingWindowFixed = new SlidingWindowFixed();
         nums = new int[]{2, 2, 2, 2, 5, 5, 5, 8};
-        System.out.println("count    " + slidingWindow.windowAverageThresholdCount(nums, 4, 3));
+        System.out.println("count    " + slidingWindowFixed.windowAverageThresholdCount(nums, 4, 3));
         String s = "havefunonleetcode";
-        System.out.println("no repeated chars count    " + slidingWindow.noRepeatedCharactersCount(s, 5));
+        System.out.println("no repeated chars count    " + slidingWindowFixed.noRepeatedCharactersCount(s, 5));
+        System.out.println("is permutation    " + slidingWindowFixed.isPermutationPresent("rb", "abracadabra"));
+        System.out.println("max card points    " + slidingWindowFixed.maxTotalPointsFromSides(nums, 2));
 
+        SlidingWindowVariable slidingWindowVariable = new SlidingWindowVariable();
         nums = new int[]{2, 3, 1, 2, 4, 3};
-        System.out.println("min length subarray    " + slidingWindow.minLengthSubarraySum(nums, 7));
+        System.out.println("min length subarray    " + slidingWindowVariable.minLengthSubarraySum(nums, 7));
+        System.out.println("max length subarray    " + slidingWindowVariable.maxLengthSubarraySum(nums, 7));
+        nums = new int[]{3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4};
+        System.out.println("max fruits    " + slidingWindowVariable.maxFruits(nums));
+        System.out.println("max score    " + slidingWindowVariable.maxScore(nums));
+        System.out.println("subarrayCountDistinctK   " + slidingWindowVariable.subarrayCountDistinctK(nums, 3));
+        System.out.println("minWindowSubstring   " + slidingWindowVariable.minWindowSubstring("adobecodebanc", "abc"));
+
+        String letters = "ccaabbb";
+        System.out.println("longest substring    " + slidingWindowVariable.longestSubstringDistinctMaxK(letters, 2));
 
         nums = new int[]{10, 5, 2, 6};
-        System.out.println("subarray prod count    " + slidingWindow.subarrayProductCount(nums, 100));
+        System.out.println("subarray prod count    " + slidingWindowVariable.subarrayProductCount(nums, 100));
+
+        BidirectionalDC bidirectionalDC = new BidirectionalDC();
+        int[] heights = {9, 3, 7, 1, 3, 2, 8, 1, 1, 3};
+        System.out.println("max water    " + bidirectionalDC.maxWater(heights));
+        System.out.println("total volume    " + bidirectionalDC.totalVolume(heights));
 
         ArrayTests tests = new ArrayTests();
         int[] buildings = {5, 1, 10, 2, 15, 3, 20, 4};
         System.out.println("buildings with view    " + tests.vantagePoints(buildings));
+
     }
 
     // this is NOT an optimization problem

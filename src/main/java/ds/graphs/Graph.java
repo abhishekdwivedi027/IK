@@ -8,15 +8,15 @@ public class Graph {
 
         Tree +
 
-        1. connected/disconnected ds.graph - there may be a few disconnected nodes
-        2. directed/undirected ds.graph - unidirectional or bidirectional
-        3. cyclic/acyclic ds.graph - there may be one or more cycles
+        1. connected/disconnected graph - there may be a few disconnected nodes
+        2. directed/undirected graph - unidirectional or bidirectional
+        3. cyclic/acyclic graph - there may be one or more cycles
         4. edge weight
 
         network of nodes/vertices and edges
         G = (V, E)
 
-        We can represent Graph as Tree using a node object.
+        We can represent Graph as Tree using a node object - node with val and list of neighbor nodes.
         But we will represent Graph as an array/array list of linked list - adjacencyList
         where array index represents the identifier of a vertex and its neighbors are stored in linked list
 
@@ -24,15 +24,15 @@ public class Graph {
         In that case we would need hashtable of linked list (and we still call it adjacencyList because the list denotes linked list)
         Also, we would need visited table instead of visited array
 
-        undirected ds.graph:
+        undirected graph:
         degree(v) = num of edges from/to the vertex
         #degrees = 2 * edges
 
-        undirected ds.graph:
+        undirected graph:
         out/in degree(v) = num of edges from/to the vertex
         #in-degrees = #out-degrees = edges
 
-        connected ds.graph:
+        connected graph:
         Eulerian Cycle => degree of every vertex must be even
         every vertex has even degree => must be Eulerian Cycle
 
@@ -59,7 +59,7 @@ public class Graph {
     // to track visited nodes
     private int[] visited;
 
-    // used to find cycles in ds.graph
+    // used to find cycles in graph
     // to see if visited neighbor is parent or not
     private int[] parents;
 
@@ -73,6 +73,7 @@ public class Graph {
     private boolean hasCycle = false;
 
     // Step 1: construct a Graph
+    // given list of edges (relationships) build a graph - adjacency list/map
     public void buildGraph(int n, List<Integer[]> edgeList) {
         for (int i=0; i<n; i++) {
             adjacencyList.add(i, new LinkedList<>());
@@ -206,7 +207,7 @@ public class Graph {
         return hasEulerianPath;
     }
 
-    // can the ds.graph be divided in two teams? if yes then it's bipartite
+    // can the graph be divided in two teams? if yes then it's bipartite
     // if A and B are connected by an edge, they cannot be in same team
     // cycle with even number of vertices => bipartite
     // two conditions - 1. cycle 2. with even number of vertices

@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
-public class SlidingWindow {
+public class SlidingWindowFixed {
 
     /*
         steps -
@@ -13,7 +13,7 @@ public class SlidingWindow {
         1. initialize variables for the leftmost window
         2. for i = k to n-1
             a. update window and its variables
-            b. update global result based on local result - counting or algo.optimization
+            b. update global result based on local result - counting or optimization
 
         types -
 
@@ -105,13 +105,13 @@ public class SlidingWindow {
     }
 
     // permutation => anagram
-    // compare map/set of characters
+    // don't compare strings; compare map/set of characters
+    // in fact compare map - compare both keys (chars) and values (num of each char)
+    // string => Map<Character, Integer>
     public boolean isPermutationPresent(String s1, String s2) {
         if (StringUtils.isBlank(s1) || StringUtils.isBlank(s2) || s1.length() > s2.length()) {
             return false;
         }
-
-        boolean isPermutationPresent = false;
 
         int k = s1.length();
         int n = s2.length();
@@ -121,25 +121,23 @@ public class SlidingWindow {
 
         // init window
         for (int i=0; i<k; i++) {
-            char c1 = s1.charAt(i);
-            addChar(letters1, c1);
-            char c2 = s2.charAt(i);
-            addChar(letters2, c2);
+            addChar(letters1, s1.charAt(i));
+            addChar(letters2, s2.charAt(i));
+        }
+        if (letters1.equals(letters2)) {
+            return true;
         }
 
         // slide window
         for (int i=k; i<n; i++) {
-            char out = s2.charAt(i-k);
-            removeChar(letters2, out);
-            char in = s2.charAt(i);
-            addChar(letters2, in);
+            addChar(letters2, s2.charAt(i));
+            removeChar(letters2, s2.charAt(i-k));
             if (letters1.equals(letters2)) {
-                isPermutationPresent = true;
-                break;
+                return true;
             }
         }
 
-        return isPermutationPresent;
+        return false;
     }
 
     /*
@@ -275,65 +273,33 @@ public class SlidingWindow {
         }
     }
 
-    /*
-        VARIABLE SIZE WINDOW
-    */
-
-    public int minLengthSubarraySum(int[] nums, int sum) {
-        if (ArrayUtils.isEmpty(nums) || sum == 0) {
-            return 0;
+    public int maxTotalPointsFromSides(int[] cardPoints, int k) {
+        int maxPoints = 0;
+        if (cardPoints == null || cardPoints.length == 0 || k == 0) {
+            return maxPoints;
         }
 
-        int left = 0;
-        int leftSum = 0;
-        int minLength = nums.length+1;
-        for (int right = 0; right<nums.length; right++) {
-            leftSum += nums[right];
+        int n = cardPoints.length;
+        int m = cardPoints.length - k; // size of sliding window
+        int points = 0;
+        int totalPoints = 0;
+        int minPoints = Integer.MAX_VALUE; // maxPoints = sum - minPoints
 
-            // push the right wall if subarray sum is less than target sum
-            if (leftSum < sum) {
-                continue;
-            }
-
-            // push the left wall as long as subarray sum is more than target sum
-            while (left <= right && leftSum-nums[left] >= sum) {
-                leftSum -= nums[left++];
-            }
-
-            int length = right - left + 1;
-            minLength = Math.min(minLength, length);
+        // init
+        for (int i=0; i<m; i++) {
+            points += cardPoints[i];
         }
 
-        return minLength == nums.length+1 ? 0 : minLength;
-    }
+        minPoints = Math.min(points, minPoints);
+        totalPoints = points;
 
-    public int subarrayProductCount(int[] nums, int prod) {
-        if (ArrayUtils.isEmpty(nums)) {
-            return 0;
+        for (int i=m; i<n; i++) {
+            points -= cardPoints[i-m];
+            points += cardPoints[i];
+            minPoints = Math.min(points, minPoints);
+            totalPoints += cardPoints[i];
         }
 
-        int left = 0;
-        int leftProd = 1;
-        int count = 0;
-        for (int right = 0; right<nums.length; right++) {
-            int num = nums[right];
-            if (num < prod) {
-                count++;
-            }
-
-            leftProd *= num;
-
-            // push the left wall as long as subarray prod is more than or equal to target prod
-            while (left <= right && leftProd >= prod) {
-                leftProd /= nums[left++];
-            }
-
-            // count subarrays
-            if (left < right && leftProd < prod) {
-                count += right - left;
-            }
-        }
-
-        return count;
+        return totalPoints - minPoints;
     }
 }

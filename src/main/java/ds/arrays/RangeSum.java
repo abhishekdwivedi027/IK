@@ -1,4 +1,4 @@
-package algo.optimization.dp;
+package ds.arrays;
 
 public class RangeSum {
 

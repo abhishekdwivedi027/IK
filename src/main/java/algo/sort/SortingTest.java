@@ -8,9 +8,10 @@ public class SortingTest {
 	
 	public static void main(String[] args) {
 
+		SortingTest sortingTest = new SortingTest();
+
 		Integer[] nums1 = {2, 4, 6, 8, 10, 9, 7, 5, 3, 1, 0, -1, 10, 9, 10};
-		int[] numbers1 = Arrays.asList(nums1).stream()
-				.mapToInt(Integer::intValue).toArray();
+		int[] numbers1 = Arrays.asList(nums1).stream().mapToInt(Integer::intValue).toArray();
 		System.out.println("unsorted array 1     " + Arrays.toString(numbers1));
 		QuickSort.quickSort(numbers1);
 		System.out.println("sorted array 1     " + Arrays.toString(numbers1));
@@ -34,6 +35,8 @@ public class SortingTest {
 		System.out.println("4th max " + QuickSort.kthMax(numbers1, 4));
 		System.out.println("3rd min " + QuickSort.kthMin(numbers1, 3));
 		System.out.println("4th min " + QuickSort.kthMin(numbers1, 4));
+
+		System.out.println("two sum " + Arrays.toString(sortingTest.twoSumIndices(numbers1, 15)));
 		
 		System.out.println("union    " + Arrays.toString(MergeSort.union(numbers1, numbers2)));
 		System.out.println("intersection    " + Arrays.toString(MergeSort.intersection(numbers1, numbers2)));
@@ -45,7 +48,7 @@ public class SortingTest {
 
 	// transform - REARRANGE input - algo.sort
 	// algo.sort when indices don't matter
-	public boolean doesSumExist(int[] nums, int target) {
+	public boolean hasTwoSum(int[] nums, int target) {
 		Arrays.sort(nums);
 		
 		int i = 0;
@@ -54,7 +57,9 @@ public class SortingTest {
 			int comp = target - nums[i];
 			if (nums[j] == comp) {
 				return true;
-			} else if (nums[j] > comp) {
+			}
+
+			if (nums[j] > comp) {
 				j--;
 			} else {
 				i++;
@@ -65,8 +70,8 @@ public class SortingTest {
 	}
 	
 	// transform - REPRESENT input to solve blocking operation (search) - hashmap
-	// works well when indices are important
-	public int[] getTwoSumIndices(int[] nums, int target) {
+	// cannot sort when indices are important
+	public int[] twoSumIndices(int[] nums, int target) {
 		Map<Integer, Integer> map = new HashMap<>();
 		
 		int[] indices = new int[2];
