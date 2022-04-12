@@ -62,7 +62,8 @@ public class SlidingWindowVariable {
         return maxLength == -1 ? 0 : maxLength;
     }
 
-    public int subarrayProductCount(int[] nums, int target) {
+
+    public int subarrayProductLessThanTargetCount(int[] nums, int target) {
         if (ArrayUtils.isEmpty(nums)) {
             return 0;
         }
@@ -76,8 +77,9 @@ public class SlidingWindowVariable {
             prod *= num;
 
             // push the left wall as long as subarray prod is more than or equal to target prod
-            while (left <= right && prod >= target) {
-                prod /= nums[left++];
+            while (left <= right && prod > target) {
+                num = nums[left++];
+                prod /= num;
             }
 
             // count subarrays
@@ -87,7 +89,7 @@ public class SlidingWindowVariable {
         return count;
     }
 
-    public int maxConsecutiveOnes(int[] nums, int k) {
+    public int maxConsecutiveOnes(int[] nums, int flipsAllowed) {
         int maxLength = 0;
         if (nums == null || nums.length == 0) {
             return maxLength;
@@ -101,13 +103,14 @@ public class SlidingWindowVariable {
                 zeroes++;
             }
 
-            while (left <= right && zeroes > k) {
+            while (left <= right && zeroes > flipsAllowed) {
                 if (nums[left++] == 0) {
                     zeroes--;
                 }
             }
 
-            maxLength = Math.max(maxLength, right - left + 1);
+            int length = right - left + 1;
+            maxLength = Math.max(maxLength, length);
         }
 
         return maxLength;
@@ -121,25 +124,25 @@ public class SlidingWindowVariable {
             return 0;
         }
 
-        Map<Integer, Integer> types = new HashMap();
+        Map<Integer, Integer> fruitTypes = new HashMap();
 
         int left = 0;
         int num = 0;
         int maxNum = 0;
         for (int right=0; right<fruits.length; right++) {
             int rightType = fruits[right];
-            int rightTypeCount = types.containsKey(rightType) ? types.get(rightType) : 0;
+            int rightTypeCount = fruitTypes.containsKey(rightType) ? fruitTypes.get(rightType) : 0;
             // add the right type
-            types.put(rightType, ++rightTypeCount);
+            fruitTypes.put(rightType, ++rightTypeCount);
             num++;
 
             // remove the left type
-            while (left <= right && types.size() > 2) {
+            while (left <= right && fruitTypes.size() > 2) {
                 int leftType = fruits[left++];
-                int leftTypeCount = types.get(leftType);
-                types.put(leftType, --leftTypeCount);
+                int leftTypeCount = fruitTypes.get(leftType);
+                fruitTypes.put(leftType, --leftTypeCount);
                 if (leftTypeCount == 0) {
-                    types.remove(leftType);
+                    fruitTypes.remove(leftType);
                 }
                 num--;
             }
@@ -152,7 +155,7 @@ public class SlidingWindowVariable {
     }
 
     // subarray with distinct digits
-    public int maxScore(int[] nums) {
+    public int maxSumSubarrayDistinctAll(int[] nums) {
         int maxScore = 0;
         if (nums == null || nums.length == 0) {
             return maxScore;
@@ -201,6 +204,7 @@ public class SlidingWindowVariable {
             char c = s.charAt(right);
             int count = map.containsKey(c) ? map.get(c) : 0;
             map.put(c, ++count);
+
             while (left<=right && map.size()>k) {
                 c = s.charAt(left++);
                 count = map.get(c);
@@ -234,6 +238,7 @@ public class SlidingWindowVariable {
             int count = map.containsKey(c) ? map.get(c) : 0;
             boolean duplicate = count != 0;
             map.put(c, ++count);
+
             while (left <= right && duplicate) {
                 c = s.charAt(left++);
                 count = map.get(c);

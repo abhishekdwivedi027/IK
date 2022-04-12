@@ -1,13 +1,20 @@
 package ds.arrays;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ArrayTests {
 
     public static void main(String[] args) {
         CycleSort cycleSort = new CycleSort();
-        int[] nums = {1};
+        int[] nums = {1, 8, 6, 2, 9, 7, 5, 4, 0, 3};
+        cycleSort.cycleSort(nums);
+        System.out.println("cycle sort   " + Arrays.toString(nums));
+        nums = new int[] {1, 8, 6, 2, 9, 3, 5, 4, 0, 3};
+        System.out.println("missing number   " + cycleSort.missingNumber(nums));
+        System.out.println("duplicate number   " + cycleSort.duplicateNumber(nums));
+        nums = new int[] {1, -7, 8, -1, 6, 2, -69, 9, 3, 5, 4, 3};
         System.out.println("smallest positive missing   " + cycleSort.smallestPositiveMissing(nums));
 
         SlidingWindowFixed slidingWindowFixed = new SlidingWindowFixed();
@@ -24,7 +31,7 @@ public class ArrayTests {
         System.out.println("max length subarray    " + slidingWindowVariable.maxLengthSubarraySum(nums, 7));
         nums = new int[]{3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4};
         System.out.println("max fruits    " + slidingWindowVariable.maxFruits(nums));
-        System.out.println("max score    " + slidingWindowVariable.maxScore(nums));
+        System.out.println("max score    " + slidingWindowVariable.maxSumSubarrayDistinctAll(nums));
         System.out.println("subarrayCountDistinctK   " + slidingWindowVariable.subarrayCountDistinctK(nums, 3));
         System.out.println("minWindowSubstring   " + slidingWindowVariable.minWindowSubstring("adobecodebanc", "abc"));
 
@@ -32,7 +39,7 @@ public class ArrayTests {
         System.out.println("longest substring    " + slidingWindowVariable.longestSubstringDistinctMaxK(letters, 2));
 
         nums = new int[]{10, 5, 2, 6};
-        System.out.println("subarray prod count    " + slidingWindowVariable.subarrayProductCount(nums, 100));
+        System.out.println("subarray prod count    " + slidingWindowVariable.subarrayProductLessThanTargetCount(nums, 100));
 
         BidirectionalDC bidirectionalDC = new BidirectionalDC();
         int[] heights = {9, 3, 7, 1, 3, 2, 8, 1, 1, 3};

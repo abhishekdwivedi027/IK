@@ -1,5 +1,7 @@
 package ds.arrays;
 
+import java.util.Arrays;
+
 public class Stock {
 
     // for lazy manager, ith day is the last day - only selling is possible
@@ -24,7 +26,6 @@ public class Stock {
     }
 
     // MAX PROFIT - MAX ONE TRANSACTION
-
     public int maxProfit(int[] prices) {
         if (prices == null || prices.length < 2) {
             return 0;
@@ -105,5 +106,45 @@ public class Stock {
         }
 
         return globalProfits[n-1];
+    }
+
+
+    // ######################HARD#########################
+
+    // MAX PROFIT - MAX TWO TRANSACTIONS
+    // init all with arr[0] = 0
+    // globalMax2[i] = max(globalMax2[i-1], localMax2[i])
+    // localMax2[i] = prices[i] - prices[i-1] + max(globalMax1[i-1], localMax2[i-1])
+    // globalMax1[i] = max(globalMax1[i-1], localMax1[i])
+    // localMax1[i] = prices[i] - prices[i-1] + max(0, localMax1[i-1])
+
+    // MAX PROFIT - MAX k TRANSACTIONS
+    // globalMax[i][j] = max(globalMax[i-1][j], localMax[i][j])
+    // localMax[i][j] = prices[i] - prices[i-1] + max(globalMax[i-1][j-1], localMax[i-1][j])
+    public int maxProfit(int[] prices, int k) {
+        if (prices == null || prices.length < 2) {
+            return 0;
+        }
+
+        int n = prices.length;
+        int[][] localProfits = new int[n][k+1];
+        int[][] globalProfits = new int[n][k+1];
+        for (int i=0; i<n; i++) {
+            for (int j=0; j<=k; j++) {
+                if (i==0 || j==0) {
+                    localProfits[i][j] = 0;
+                    globalProfits[i][j] = 0;
+                }
+            }
+        }
+
+        for (int i=1; i<n; i++) {
+            for (int j=1; j<=k; j++) {
+                localProfits[i][j] = prices[i] - prices[i-1] + Math.max(globalProfits[i-1][j-1], localProfits[i-1][j]);
+                globalProfits[i][j] = Math.max(globalProfits[i-1][j], localProfits[i][j]);
+            }
+        }
+
+        return globalProfits[n-1][k];
     }
 }
