@@ -1,8 +1,6 @@
 package algo.sort;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class SortingTest {
 	
@@ -21,6 +19,7 @@ public class SortingTest {
 		System.out.println("unsorted array 2     " + Arrays.toString(nums2));
 		HeapSort.heapSort(nums2);
 		System.out.println("sorted array 2     " + Arrays.toString(nums2));
+		System.out.println("zigzag     " + Arrays.toString(sortingTest.zigzagSort(numbers2)));
 
 		
 		// SelectionSort.selectionSort(nums1);
@@ -113,6 +112,67 @@ public class SortingTest {
 		
 		return secMax;
 	}
-	
-	
+
+	public List<Integer> pancakeSort(int[] nums) {
+		List<Integer> flipPoints = new ArrayList<>();
+		if (nums == null || nums.length < 2) {
+			return flipPoints;
+		}
+
+		int n = nums.length;
+
+		for (int i=n-1; i>0; i--) {
+			int num = nums[i];
+			if (num == i+1) {
+				continue;
+			}
+
+			// find where the number that should be there at i (--> i+1) is
+			int j = i-1;
+			while (j>-1) {
+				if (nums[j] == i+1) {
+					break;
+				}
+				j--;
+			}
+
+			// insert spatula at j and flip from 0 to j
+			reverse(nums, 0, j);
+			flipPoints.add(j+1);
+			// insert spatula at i and flip from 0 to i
+			reverse(nums, 0, i);
+			flipPoints.add(i+1);
+		}
+
+		return flipPoints;
+	}
+
+	private void reverse(int[] nums, int left, int right) {
+		while (left < right) {
+			int temp = nums[left];
+			nums[left] = nums[right];
+			nums[right] = temp;
+			left++;
+			right--;
+		}
+	}
+
+	public int[] zigzagSort(int[] nums) {
+		if (nums == null || nums.length < 3) {
+			return nums;
+		}
+		// nums[odd] < nums[even] - it might as well be the other way round
+		for (int i=1; i< nums.length; i++) {
+			boolean evenIndex = i%2 == 0;
+			int prev = nums[i-1];
+			int curr = nums[i];
+			if ((evenIndex && curr < prev) || (!evenIndex && curr > prev)) {
+				// swap i and i-1
+				int temp = nums[i-1];
+				nums[i-1] = nums[i];
+				nums[i] = temp;
+			}
+		}
+		return nums;
+	}
 }
