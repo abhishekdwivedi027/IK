@@ -1,16 +1,16 @@
-package algo.math;
+package algo.common;
 
 import java.util.Arrays;
 
-public class MathTest {
+public class CommonTest {
 	
 	public static void main(String[] args) {
-		MathTest mathTest = new MathTest();
-		int[] rep = mathTest.representNumber(10, 10);
+		CommonTest commonTest = new CommonTest();
+		int[] rep = commonTest.representNumber(10, 10);
 		System.out.println(Arrays.toString(rep));
-		int reversed = mathTest.reverseNumber(10);
+		int reversed = commonTest.reverseNumber(10);
 		System.out.println(reversed);
-		int quotient = mathTest.divide(-2147483648, -1);
+		int quotient = commonTest.divide(-2147483648, -1);
 		System.out.println(quotient);
 	}
 	

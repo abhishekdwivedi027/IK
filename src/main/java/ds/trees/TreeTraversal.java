@@ -53,7 +53,7 @@ public class TreeTraversal {
 
         // q empty
         // after traversing all levels
-        // here we can reverse the whole ds.trees upside down
+        // here we can reverse the whole trees upside down
     }
 
     // lazy manager works upfront
