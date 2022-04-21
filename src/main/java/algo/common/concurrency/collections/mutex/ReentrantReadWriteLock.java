@@ -1,8 +1,13 @@
-package algo.common.concurrency;
+package algo.common.concurrency.collections.mutex;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * lock = blocking wait and unblocking notify based on conditions
+ * we can implement this using implicit as well as explicit lock
+ * since this lock is not reentrant, one thread can have max one
+ */
 public class ReentrantReadWriteLock {
 
     private Map<Thread, Integer> readingThreads = new HashMap<>();

@@ -2,6 +2,7 @@ package ds.arrays;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class ArrayTests {
@@ -47,9 +48,44 @@ public class ArrayTests {
         System.out.println("total volume    " + bidirectionalDC.totalVolume(heights));
 
         ArrayTests tests = new ArrayTests();
+        nums = new int[]{1, 2, 3, 4, 5};
+        System.out.println("products    " + Arrays.toString(tests.product(nums)));
+
         int[] buildings = {5, 1, 10, 2, 15, 3, 20, 4};
         System.out.println("buildings with view    " + tests.vantagePoints(buildings));
 
+        ArrayList<ArrayList<Integer>> intervals = new ArrayList<>();
+        intervals.add(new ArrayList<>(Arrays.asList(1, 3)));
+        intervals.add(new ArrayList<>(Arrays.asList(5, 7)));
+        intervals.add(new ArrayList<>(Arrays.asList(2, 4)));
+        intervals.add(new ArrayList<>(Arrays.asList(6, 8)));
+        tests.getMergedIntervals(intervals);
+
+    }
+
+    public int[] product(int[] nums) {
+        if (nums == null || nums.length < 2) {
+            return null;
+        }
+
+        int n = nums.length;;
+        int[] products = new int[n];
+
+        // calculate prefix
+        int prefix = 1;
+        for (int i=0; i<n ; i++) {
+            products[i] = prefix;
+            prefix *= nums[i];
+        }
+
+        // calculate postfix
+        int postfix = 1;
+        for (int i=n-1; i>-1 ; i--) {
+            products[i] *= postfix;
+            postfix *= nums[i];
+        }
+
+        return products;
     }
 
     // this is NOT an optimization problem
@@ -69,5 +105,39 @@ public class ArrayTests {
         }
 
         return result;
+    }
+
+
+    ArrayList<ArrayList<Integer>> getMergedIntervals(ArrayList<ArrayList<Integer>> intervals) {
+
+        if (intervals == null || intervals.size() < 2) {
+            return intervals;
+        }
+
+        ArrayList<ArrayList<Integer>> mergedIntervals = new ArrayList();
+
+        // sort intervals based on start time
+        intervals.sort(Comparator.comparing((list) -> list.get(0)));
+
+        ArrayList<Integer> mergedInterval = new ArrayList<>();
+        for (ArrayList<Integer> interval: intervals) {
+            if (mergedInterval.size() == 0) {
+                mergedInterval.add(interval.get(0));
+                mergedInterval.add(interval.get(1));
+                mergedIntervals.add(mergedInterval);
+                continue;
+            }
+
+            if (mergedInterval.get(1) >= interval.get(0)) {
+                mergedInterval.set(1, Math.max(interval.get(1), mergedInterval.get(1)));
+            } else {
+                mergedInterval = new ArrayList<>();
+                mergedInterval.add(interval.get(0));
+                mergedInterval.add(interval.get(1));
+                mergedIntervals.add(mergedInterval);
+            }
+        }
+
+        return mergedIntervals;
     }
 }
