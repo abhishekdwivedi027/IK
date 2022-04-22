@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * used for inter-thread communication (ex: scatter-gather or map-reduce framework)
  *
- * unlike semaphore, the count is not incremented; it's only decremented => no reuse
+ * unlike counting semaphore, the count is not incremented; it's only decremented => no reuse
  * await - block the calling thread - wait() unless count == 0
  * countdown - decrement the count; and unblock all threads once count == 0
  */

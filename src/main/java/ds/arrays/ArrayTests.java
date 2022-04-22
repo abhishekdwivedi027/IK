@@ -61,6 +61,10 @@ public class ArrayTests {
         intervals.add(new ArrayList<>(Arrays.asList(6, 8)));
         tests.getMergedIntervals(intervals);
 
+        int[] rotated = {8, 9, 1, 2, 3, 4, 5};
+        System.out.println("min index sorted rotated    " + tests.findMinInRotatedSorted(rotated));
+        System.out.println("find index sorted rotated    " + tests.searchInRotatedSorted(rotated, 9));
+        System.out.println("find index sorted rotated    " + tests.searchInRotatedSorted(rotated, 0));
     }
 
     public int[] product(int[] nums) {
@@ -139,5 +143,90 @@ public class ArrayTests {
         }
 
         return mergedIntervals;
+    }
+
+    public int findMinInRotatedSorted(int[] nums) {
+        if (nums == null || nums.length < 1) {
+            return -1;
+        }
+
+        if (nums.length == 1) {
+            return nums[0];
+        }
+
+        int n = nums.length;
+        int left = 0;
+        int right = n-1;
+
+        return findMinInRotatedSortedHelper(nums, left, right);
+    }
+
+    private int findMinInRotatedSortedHelper(int[] nums, int left, int right) {
+        if (left > right) {
+            return -1;
+        }
+
+        int mid = left + (right - left)/2;
+
+        if (mid == 0) {
+            if (nums[mid] < nums[mid+1]) {
+                return mid;
+            } else {
+                return mid+1;
+            }
+        }
+
+        if (nums[mid] < nums[mid-1]) {
+            return mid;
+        }
+
+        if (nums[mid] < nums[right]) {
+            return findMinInRotatedSortedHelper(nums, left, mid-1);
+        } else {
+            return findMinInRotatedSortedHelper(nums, mid+1, right);
+        }
+    }
+
+    public int searchInRotatedSorted(int[] nums, int num) {
+        if (nums == null || nums.length < 1) {
+            return -1;
+        }
+
+        if (nums.length == 1) {
+            return nums[0] == num ? 0 : -1;
+        }
+
+        int left = 0;
+        int right = nums.length-1;
+
+        int min = findMinInRotatedSortedHelper(nums, left, right);
+        if (min == -1) {
+            return -1;
+        }
+
+        if (num >= nums[min] && num <= nums[right]) {
+            return binarySearch(nums, num, min, right);
+        }
+
+        if (min > 0 && num >= nums[left] && num <= nums[min-1] ) {
+            return binarySearch(nums, num, left, min-1);
+        }
+
+        return -1;
+    }
+
+    private int binarySearch(int[] nums, int num, int left, int right) {
+        if (left > right) {
+            return -1;
+        }
+
+        int mid = left + (right - left)/2;
+        if (num == nums[mid]) {
+            return mid;
+        } else if (num < nums[mid]) {
+            return binarySearch(nums, num, left, mid-1);
+        } else {
+            return binarySearch(nums, num, mid+1, right);
+        }
     }
 }

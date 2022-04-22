@@ -3,11 +3,10 @@ package algo.common.concurrency;
 import common.Gender;
 import common.Person;
 
-import java.time.LocalDateTime;
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
 public class Concurrency {
 
@@ -42,10 +41,118 @@ public class Concurrency {
 
     public static void main(String[] args) {
         Concurrency concurrency = new Concurrency();
-        concurrency.mapReduce(10);
-        // concurrency.unisexWashroom(3, 12);
+        concurrency.printer(10);
+        // concurrency.mapReduce(10);
     }
 
+    public void printEvenOdd(int n) {
+        Object lock = new Object();
+
+        Thread evenPrinter = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                for (int i=0; i<=n; i=i+2) {
+                    synchronized (lock) {
+                        try {
+                            System.out.println("printing even " + i);
+                            lock.notify();
+                            if (i == n) {
+                                break;
+                            }
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        Thread oddPrinter = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i=1; i<=n; i=i+2) {
+                    synchronized (lock) {
+                        try {
+                            System.out.println("printing odd " + i);
+                            lock.notify();
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        try {
+            evenPrinter.start();
+            oddPrinter.start();
+            evenPrinter.join();
+            oddPrinter.join();
+            System.out.println("Printing over");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * using semaphore for inter-thread communication
+     * @param n
+     */
+    public void printer(int n) {
+        Semaphore semaphore = new Semaphore(1, true);
+
+        Thread evenPrinter = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                for (int i=0; i<=n; i=i+2) {
+                    try {
+                        semaphore.acquire();
+                        System.out.println("printing even " + i);
+                        if (i == n) {
+                            break;
+                        }
+                        semaphore.release();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        Thread oddPrinter = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i=1; i<=n; i=i+2) {
+                    try {
+                        semaphore.acquire();
+                        System.out.println("printing odd " + i);
+                        semaphore.release();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        try {
+            evenPrinter.start();
+            oddPrinter.start();
+            evenPrinter.join();
+            oddPrinter.join();
+            System.out.println("Printing over");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * usage of countdown latch in inter-thread communication
+     * @param n
+     */
     public void mapReduce(int n) {
         CountDownLatch ready = new CountDownLatch(n);
         CountDownLatch start = new CountDownLatch(1);

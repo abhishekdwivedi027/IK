@@ -157,6 +157,11 @@ public class SortingTest {
 		}
 	}
 
+	/**
+	 * just swap with previous if the trend breaks
+	 * @param nums
+	 * @return
+	 */
 	public int[] zigzagSort(int[] nums) {
 		if (nums == null || nums.length < 3) {
 			return nums;

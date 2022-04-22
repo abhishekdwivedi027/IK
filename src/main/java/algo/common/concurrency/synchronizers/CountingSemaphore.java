@@ -5,12 +5,13 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * state = counter
+ * state = counter = number of threads accessing a resource
+ * if limit == 1 => can be used like a mutex
  * acquire - increment counter. block if/while counter == limit.
  * release - decrement counter. block if/while counter == 0.
  * there are two conditions => use explicit lock
  */
-public class Semaphore {
+public class CountingSemaphore {
 
     private int limit;
     private int counter;
@@ -19,7 +20,7 @@ public class Semaphore {
     private final Condition noneTaken = lock.newCondition();
 
 
-    public Semaphore(int limit) {
+    public CountingSemaphore(int limit) {
         this.limit = limit;
         this.counter = 0;
     }
