@@ -42,7 +42,7 @@ public class Concurrency {
     public static void main(String[] args) {
         Concurrency concurrency = new Concurrency();
         concurrency.printer(10);
-        // concurrency.mapReduce(10);
+        concurrency.mapReduce(10);
     }
 
     public void printEvenOdd(int n) {

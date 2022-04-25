@@ -17,7 +17,7 @@ public class KnapsackRecursive {
         }
 
         // recurrence equation
-        // algo.optimization => optimal substructure
+        // optimization => optimal substructure
         // f(n, w) = nth_item_weight <= w ? max(pick, leave) : leave
         // where leave = f(n-1, w) and pick = f(n, w - nth_item_weight) + nth_item_value
 

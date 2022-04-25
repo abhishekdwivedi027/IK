@@ -33,9 +33,11 @@ public class CycleSort {
         int n = nums.length;
         for (int i=0; i<n; i++) {
             // source nums[i] must equal destination i
+            // NOTE: it's WHILE not IF
             while (nums[i] != i) {
                 // source is not equal to destination - find the right destination for this source
                 int j = nums[i]; // j is the destination index for source nums[i]
+                // swap i and j
                 int temp = nums[j];
                 nums[j] = nums[i]; // source is placed at the destination
                 nums[i] = temp; // i has not been fixed as yet => that's why while loop not if condition
@@ -113,11 +115,14 @@ public class CycleSort {
     //################  HARD   ###############
 
     public int smallestPositiveMissing(int[] nums) {
-        // non-positive numbers are noise - remove them
+        // non-positive numbers are noise - remove negatives and zeroes
         // partition this array into non-positive and positive section
         // keep the positive partition in the left
         int p = 0;
         int np = nums.length-1;
+
+        /*
+        // commenting out - other way to partition
         // partition - check left and move left rightwards
         while (p <= np ) { // partition - left and right pointers mustn't cross each other
             // check left pointer
@@ -134,8 +139,23 @@ public class CycleSort {
                 p++;
             }
         }
+        */
 
-        // 0 to p-1 - positive
+        while (p < np) {
+            if (nums[p] > 0) {
+                p++;
+            } else if (nums[np] <= 0) {
+                np--;
+            } else {
+                int temp = nums[p];
+                nums[p] = nums[np];
+                nums[np] = temp;
+                p++;
+                np--;
+            }
+        }
+
+        // 0 to p-1 - positive (remember:  pivotIndexFinal = left-1)
         // p to np - non-positive
 
         // ideally the positive sections be filled with 1 to p
@@ -169,6 +189,7 @@ public class CycleSort {
         return smallestPositiveMissing;
     }
 
+    // TODO explain the solution
     public int minSwapsCouplesHoldingHands(int[] nums) {
         if (nums == null || nums.length < 2 || nums.length%2 == 1) {
             return -1;

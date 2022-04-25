@@ -44,8 +44,8 @@ public class ArrayTests {
 
         BidirectionalDC bidirectionalDC = new BidirectionalDC();
         int[] heights = {9, 3, 7, 1, 3, 2, 8, 1, 1, 3};
-        System.out.println("max water    " + bidirectionalDC.maxWater(heights));
-        System.out.println("total volume    " + bidirectionalDC.totalVolume(heights));
+        System.out.println("max water    " + bidirectionalDC.maxWaterVolume(heights));
+        System.out.println("total volume    " + bidirectionalDC.totalWaterVolume(heights));
 
         ArrayTests tests = new ArrayTests();
         nums = new int[]{1, 2, 3, 4, 5};
@@ -54,17 +54,13 @@ public class ArrayTests {
         int[] buildings = {5, 1, 10, 2, 15, 3, 20, 4};
         System.out.println("buildings with view    " + tests.vantagePoints(buildings));
 
-        ArrayList<ArrayList<Integer>> intervals = new ArrayList<>();
-        intervals.add(new ArrayList<>(Arrays.asList(1, 3)));
-        intervals.add(new ArrayList<>(Arrays.asList(5, 7)));
-        intervals.add(new ArrayList<>(Arrays.asList(2, 4)));
-        intervals.add(new ArrayList<>(Arrays.asList(6, 8)));
-        tests.getMergedIntervals(intervals);
-
         int[] rotated = {8, 9, 1, 2, 3, 4, 5};
         System.out.println("min index sorted rotated    " + tests.findMinInRotatedSorted(rotated));
         System.out.println("find index sorted rotated    " + tests.searchInRotatedSorted(rotated, 9));
         System.out.println("find index sorted rotated    " + tests.searchInRotatedSorted(rotated, 0));
+
+        nums = new int[]{2, 3, -4, -9, -1, -7, 1, -5, -6};
+        System.out.println("alternate    " + Arrays.toString(tests.alternatePositiveNegative(nums)));
     }
 
     public int[] product(int[] nums) {
@@ -109,40 +105,6 @@ public class ArrayTests {
         }
 
         return result;
-    }
-
-
-    ArrayList<ArrayList<Integer>> getMergedIntervals(ArrayList<ArrayList<Integer>> intervals) {
-
-        if (intervals == null || intervals.size() < 2) {
-            return intervals;
-        }
-
-        ArrayList<ArrayList<Integer>> mergedIntervals = new ArrayList();
-
-        // sort intervals based on start time
-        intervals.sort(Comparator.comparing((list) -> list.get(0)));
-
-        ArrayList<Integer> mergedInterval = new ArrayList<>();
-        for (ArrayList<Integer> interval: intervals) {
-            if (mergedInterval.size() == 0) {
-                mergedInterval.add(interval.get(0));
-                mergedInterval.add(interval.get(1));
-                mergedIntervals.add(mergedInterval);
-                continue;
-            }
-
-            if (mergedInterval.get(1) >= interval.get(0)) {
-                mergedInterval.set(1, Math.max(interval.get(1), mergedInterval.get(1)));
-            } else {
-                mergedInterval = new ArrayList<>();
-                mergedInterval.add(interval.get(0));
-                mergedInterval.add(interval.get(1));
-                mergedIntervals.add(mergedInterval);
-            }
-        }
-
-        return mergedIntervals;
     }
 
     public int findMinInRotatedSorted(int[] nums) {
@@ -228,5 +190,67 @@ public class ArrayTests {
         } else {
             return binarySearch(nums, num, mid+1, right);
         }
+    }
+
+    /**
+     * must be stable operation - the order of positive and negative numbers must not change
+     * @param nums
+     * @return
+     */
+    public int[] alternatePositiveNegative(int[] nums) {
+        if (nums == null || nums.length < 1) {
+            return nums;
+        }
+
+        // nums[odd] --> positive
+        // nums[even] --> negative
+        for (int i=0; i< nums.length; i++) {
+            int num = nums[i];
+            boolean isEven = i%2 == 0;
+            // should be a negative number here
+            if (isEven && num < 0) {
+                // find next positive number
+                int p = findPositiveIndex(nums, i+1);
+                // swap with next positive number
+                if (p != -1) {
+                    swap(nums, i, p);
+                }
+                continue;
+            }
+            // should be a positive number here
+            if (!isEven && num > 0) {
+                // find next negative
+                int n = findNegativeIndex(nums, i+1);
+                // swap with next negative number
+                if (n != -1) {
+                    swap(nums, i, n);
+                }
+                continue;
+            }
+        }
+
+        return nums;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    private int findPositiveIndex(int[] nums, int left) {
+        while (left < nums.length && nums[left] < 0) {
+            left++;
+        }
+
+        return left < nums.length ? left : -1;
+    }
+
+    private int findNegativeIndex(int[] nums, int left) {
+        while (left < nums.length && nums[left] > 0) {
+            left++;
+        }
+
+        return left < nums.length ? left : -1;
     }
 }

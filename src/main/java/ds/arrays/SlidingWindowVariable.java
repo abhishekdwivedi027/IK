@@ -10,6 +10,8 @@ public class SlidingWindowVariable {
         VARIABLE SIZE WINDOW - optimization - max/min in array
     */
 
+    // TODO subarray sum => suffix sum => prefix sum can also be used -- explore
+
     public int minLengthSubarraySum(int[] nums, int target) {
         if (ArrayUtils.isEmpty(nums) || target == 0) {
             return 0;
@@ -136,7 +138,7 @@ public class SlidingWindowVariable {
             fruitTypes.put(rightType, ++rightTypeCount);
             num++;
 
-            // remove the left type
+            // fix the violated condition if needed - remove the left type
             while (left <= right && fruitTypes.size() > 2) {
                 int leftType = fruits[left++];
                 int leftTypeCount = fruitTypes.get(leftType);
@@ -172,6 +174,7 @@ public class SlidingWindowVariable {
             map.put(num, ++count);
             score += num;
 
+            // fix the violated condition if needed
             while (left <= right && duplicate) {
                 num = nums[left++];
                 count = map.get(num);
@@ -205,6 +208,7 @@ public class SlidingWindowVariable {
             int count = map.containsKey(c) ? map.get(c) : 0;
             map.put(c, ++count);
 
+            // fix the violated condition if needed
             while (left<=right && map.size()>k) {
                 c = s.charAt(left++);
                 count = map.get(c);
@@ -239,6 +243,7 @@ public class SlidingWindowVariable {
             boolean duplicate = count != 0;
             map.put(c, ++count);
 
+            // fix the violated condition if needed
             while (left <= right && duplicate) {
                 c = s.charAt(left++);
                 count = map.get(c);
@@ -306,6 +311,7 @@ public class SlidingWindowVariable {
     }
 
     // ######################  HARD  ######################
+    // TODO revise
 
     // all subarrays with distinct K integers
     public int subarrayCountDistinctK(int[] nums, int k) {

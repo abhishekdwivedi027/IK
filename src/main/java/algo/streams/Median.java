@@ -1,12 +1,13 @@
 package algo.streams;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class Median {
 
     private PriorityQueue<Integer> minHeapOfMaxHalf = new PriorityQueue<>();
-    private PriorityQueue<Integer> maxHeapOfMinHalf = new PriorityQueue<>(Collections.reverseOrder());
+    private PriorityQueue<Integer> maxHeapOfMinHalf = new PriorityQueue<>(Comparator.reverseOrder());
 
     // one half side - the side with smaller nums - is kept in max heap
     // other half side - the side with larger nums - is kept in min heap

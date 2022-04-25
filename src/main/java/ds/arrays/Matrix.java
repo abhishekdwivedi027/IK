@@ -32,21 +32,25 @@ public class Matrix {
         int totalNums = matrix.length * matrix[0].length;
 
         while (nums.size() < totalNums) {
+            // top left --> top right
             for (int col=left; col<=right && nums.size() < totalNums; col++) {
                 nums.add(matrix[top][col]);
             }
             top++;
 
+            // top right --> bottom right
             for (int row=top; row<=bottom && nums.size() < totalNums; row++) {
                 nums.add(matrix[row][right]);
             }
             right--;
 
+            // bottom right --> bottom left
             for (int col=right; col>=left && nums.size() < totalNums; col--) {
                 nums.add(matrix[bottom][col]);
             }
             bottom--;
 
+            // bottom left --> top left
             for (int row=bottom; row>=top && nums.size() < totalNums; row--) {
                 nums.add(matrix[row][left]);
             }
@@ -71,21 +75,25 @@ public class Matrix {
         int totalNums = n * n;
 
         while (num < totalNums) {
+            // top left --> top right
             for (int col=left; col<=right && num < totalNums; col++) {
                 matrix[top][col] = ++num;
             }
             top++;
 
+            // top right --> bottom right
             for (int row=top; row<=bottom && num < totalNums; row++) {
                 matrix[row][right] = ++num;
             }
             right--;
 
+            // bottom right --> bottom left
             for (int col=right; col>=left && num < totalNums; col--) {
                 matrix[bottom][col] = ++num;
             }
             bottom--;
 
+            // bottom left --> top left
             for (int row=bottom; row>=top && num < totalNums; row--) {
                 matrix[row][left] = ++num;
             }
@@ -109,6 +117,7 @@ public class Matrix {
         int right = n-1;
 
         while (top < m && right > -1) {
+            // start with top right - true/false will eliminate row/column
             int num = matrix[top][right];
             if (num == target) {
                 found = true;
@@ -153,7 +162,7 @@ public class Matrix {
     }
 
     // sum of all numbers inside a grid
-    // prefixSums[i][j] = matrix[i-1][j-1] + prefixSums[i-1][j] + prefixSums[i][j-1] - prefixSums[i-1][j-1];
+    // prefixSums[i][j] =  prefixSums[i-1][j] + prefixSums[i][j-1] - prefixSums[i-1][j-1] + matrix[i-1][j-1];
     // rangeSum(r1, c1, r2, c2) = prefixSums[r2][c2] - prefixSums[r1-1][c2] - prefixSums[r2][c1-1] + prefixSums[r1-1][c1-1];
     public int rangeSum(int[][] matrix, int row1, int col1, int row2, int col2) {
         int m = matrix.length;
@@ -171,7 +180,8 @@ public class Matrix {
 
         for (int i=1; i<m+1; i++) {
             for (int j=1; j<n+1; j++) {
-                prefixSums[i][j] = matrix[i-1][j-1] + prefixSums[i-1][j] + prefixSums[i][j-1] - prefixSums[i-1][j-1];
+                // prefix = top + left - top-left + top-left matrix value
+                prefixSums[i][j] =  prefixSums[i-1][j] + prefixSums[i][j-1] - prefixSums[i-1][j-1] + matrix[i-1][j-1];
             }
         }
 
@@ -209,6 +219,7 @@ public class Matrix {
                 if (matrix[i][j] == 0) {
                     table[i][j] = 0;
                 } else {
+                    // 1 + min(top-left, min(top, left))
                     table[i][j] = 1 + Math.min(table[i-1][j-1], Math.min(table[i-1][j], table[i][j-1]));
                 }
 

@@ -9,8 +9,8 @@ public class Stock {
     // profit w/o sale on ith day = globalProfits[i-1]
     // profit with sale on ith day = localProfits[i] - mandatory sale on day i
     // localProfits[i] = max(profit when bought on i-1st day, profit when bought earlier)
-    // profit with sale on ith day when bought on i-1st day = prices[i] - prices[i-1] + globalProfits[last_sale_day]
-    // profit with sale on ith day when bought earlier = prices[i] - prices[i-1] + localProfits[i-1]
+    // total profit with sale on ith day when bought on i-1st day = globalProfits[last_sale_day] + prices[i] - prices[i-1] - fee
+    // total profit with sale on ith day when bought earlier =  localProfits[i-1] + prices[i] - prices[i-1]; fee cancels out
     // localProfits[i] = prices[i] - prices[i-1] + max(globalProfits[last_sale_day], localProfits[i-1])
     // globalProfits[i] = max(globalProfits[i-1], localProfits[i])
 
@@ -26,6 +26,7 @@ public class Stock {
     }
 
     // MAX PROFIT - MAX ONE TRANSACTION
+    // globalProfits[last_sale_day] == 0
     public int maxProfit(int[] prices) {
         if (prices == null || prices.length < 2) {
             return 0;
@@ -46,6 +47,7 @@ public class Stock {
     }
 
     // MAX PROFIT - ANY NUMBER OF TRANSACTIONS
+    // globalProfits[last_sale_day] == globalProfits[i-1]
     public int maxTotalProfit(int[] prices) {
         if (prices == null || prices.length < 2) {
             return 0;
@@ -66,6 +68,7 @@ public class Stock {
     }
 
     // MAX PROFIT - ANY NUMBER OF TRANSACTIONS
+    // globalProfits[last_sale_day] == globalProfits[i-3]
     // last_sale_day when buy was on i-1 = i-3 because of one day cooldown
     public int maxTotalProfitWithCooldown(int[] prices) {
         if (prices == null || prices.length < 2) {

@@ -4,6 +4,7 @@ public class KnapsackVariant {
 
     // problem 1: subset sum problem
     // can we find a subset to get this sum?
+    // this is subset, not subarray (where range sum or sliding window could be used)
     private boolean[][] subsetSums;
     public boolean subsetSum(int[] nums, int sum) {
         int n = nums.length;
@@ -13,10 +14,10 @@ public class KnapsackVariant {
         for (int i=0; i<=n; i++) {
             for (int j=0; j<=sum; j++) {
                 if (i==0) {
-                    subsetSums[i][j] = false; // no num to choose
+                    subsetSums[i][j] = false; // no input => no num to choose
                 }
                 if (j==0) {
-                    subsetSums[i][j] = true; // empty subset
+                    subsetSums[i][j] = true; // zero sum => empty subset; subsetSums[0][0] = true
                 }
             }
         }

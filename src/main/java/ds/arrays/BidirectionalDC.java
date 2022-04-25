@@ -27,6 +27,7 @@ public class BidirectionalDC {
         return getIndex(nums, target, left, right) != -1;
     }
 
+    // binary search
     private int getIndex(int[] nums, int target, int left, int right) {
         int index = -1;
         if (left>right) {
@@ -64,6 +65,7 @@ public class BidirectionalDC {
     }
 
     // using hashmap - no sorting
+    // save on time complexity and pay for space complexity
     public boolean hasTwoSum3(int[] nums, int sum) {
         boolean hasTwoSum = false;
         Map<Integer, Integer> map = new HashMap<>();
@@ -81,6 +83,12 @@ public class BidirectionalDC {
         return hasTwoSum;
     }
 
+    /**
+     * three sum - combination of 2 pointers and binary search
+     * @param nums
+     * @param sum
+     * @return
+     */
     public int[] threeSum(int[] nums, int sum) {
         if (nums == null || nums.length < 3) {
             return null;
@@ -110,16 +118,22 @@ public class BidirectionalDC {
         return threeSum;
     }
 
-    public int maxWater(int[] heights) {
+    /**
+     * max water volume == max area between two bars
+     * @param heights
+     * @return
+     */
+    public int maxWaterVolume(int[] heights) {
         int n = heights.length;
         int left = 0;
         int right = n-1;
         int maxArea = 0;
         while (left < right) {
+            // area = lesser height between two walls * separation between walls
             int area = Math.min(heights[left], heights[right]) * (right - left);
             maxArea = Math.max(maxArea, area);
 
-            // move the shorter bar
+            // leave the higher bar and move the shorter bar
             if (heights[left] <= heights[right]) {
                 left++;
             } else {
@@ -130,7 +144,7 @@ public class BidirectionalDC {
         return maxArea;
     }
 
-    public int totalVolume(int[] heights) {
+    public int totalWaterVolume(int[] heights) {
         int n = heights.length;
         int left = 0;
         int right = n-1;
@@ -138,7 +152,10 @@ public class BidirectionalDC {
         int totalVolume = 0;
         while (left < right) {
             int localLevel = Math.min(heights[left], heights[right]);
+            // local level will only contribute if it's more than global level
+            // global level is max level
             if (localLevel > globalLevel) {
+                // local volume = delta * distance
                 totalVolume += (localLevel - globalLevel) * (right - left);
                 globalLevel = localLevel;
             }
@@ -155,6 +172,7 @@ public class BidirectionalDC {
     }
 
     // HARD
+    // TODO - bidirectional DC
     public int rainWater(int[] heights) {
         int n = heights.length;
         int left = 0;
@@ -169,11 +187,15 @@ public class BidirectionalDC {
 
     // majority: frequency > n/2
     // mode: frequency max
-    // alternate solution: map
+    // majority => mode but not vice-versa
+    // alternate solution: using map
     public boolean hasMajority(int[] nums) {
         if (nums == null || nums.length == 0) {
             return false;
         }
+
+        // TODO confirm if this step is needed
+        Arrays.sort(nums);
 
         int num = nums[0];
         int frequency = 1;
@@ -201,7 +223,7 @@ public class BidirectionalDC {
         if (array == null || array.length == 0) {
             return false;
         }
-
+        // sort and binary search to find indices of the given number
         Arrays.sort(array);
         int n = array.length;
         int leftIndex = getLeftIndex(array, target, 0, n-1);
@@ -256,12 +278,23 @@ public class BidirectionalDC {
         return getKth(array, 0, n-1, n/2) == target;
     }
 
+    /**
+     * don't sort the whole array; just fix one index
+     * what number should go to kth index when the array is sorted?
+     * @param nums
+     * @param start
+     * @param end
+     * @param kthIndex
+     * @return
+     */
     private int getKth(int[] nums, int start, int end, int kthIndex) {
 
+        // exit case
         if (start == kthIndex) {
             return nums[start];
         }
 
+        // exit case
         if (end == kthIndex) {
             return nums[end];
         }
@@ -271,6 +304,9 @@ public class BidirectionalDC {
         int pivotIndexInitial = random.nextInt(end - start) + start;
         // nothing to do with K
         int pivotIndexFinal = getPivotIndexFinal(nums, start, end, pivotIndexInitial);
+
+        // number at pivotIndexInitial will be placed at pivotIndexFinal
+        // any number left to pivotIndexFinal is lesser and any number right to pivotIndexFinal is greater than nums[pivotIndexFinal
 
         if (pivotIndexFinal < kthIndex) {
             return getKth(nums, pivotIndexFinal+1, end, kthIndex);
@@ -285,6 +321,7 @@ public class BidirectionalDC {
 
         int pivotIndexFinal = pivotIndexInitial;
 
+        // this number - pivotValue - will be placed at the right index
         int pivotValue = nums[pivotIndexInitial];
         nums[pivotIndexInitial] = nums[start];
         nums[start] = pivotValue;
@@ -292,6 +329,7 @@ public class BidirectionalDC {
         int left = start + 1;
         int right = end;
 
+        // finding pivotIndexFinal using two pointers and swapping
         while(left < right) {
             if (nums[left] < pivotValue) {
                 left++;
@@ -307,6 +345,8 @@ public class BidirectionalDC {
         }
 
         pivotIndexFinal = left-1;
+
+        // swap with start
         nums[start] = nums[pivotIndexFinal];
         nums[pivotIndexFinal] = pivotValue;
 

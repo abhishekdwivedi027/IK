@@ -2,6 +2,17 @@ package algo.optimization.knapsack.knapsackUnbounded;
 
 public class KnapsackVariation {
 
+    /**
+     * how is this different from knapsack01?
+     * 01
+     *         // f(n, w) = nth_item_weight <= w ? max(pick, leave) : leave
+     *         // where leave = f(n-1, w) and pick = f(n-1, w - nth_item_weight) + nth_item_value
+     * unbounded
+     *         // f(n, w) = nth_item_weight <= w ? max(pick, leave) : leave
+     *         // where leave = f(n-1, w) and pick = f(n**, w - nth_item_weight) + nth_item_value
+     *         pick case is different, it's table[i][j-weight] unlike table[i-1][j-weight] in 01
+     */
+
     // 1. Rod Cutting problem
     // weight => length
     private int[][] maxPrices;
@@ -62,8 +73,8 @@ public class KnapsackVariation {
 
         // recurrence equation
         for (int i=1; i<=n; i++) {
+            int coin = coins[i-1];
             for (int j=1; j<=sum; j++) {
-                int coin = coins[i-1];
                 int leaveCount = coinCount[i-1][j];
                 if (coin <= j) {
                     int pickCount = coinCount[i][j-coin];
@@ -99,8 +110,8 @@ public class KnapsackVariation {
 
         // recurrence equation
         for (int i=1; i<=n; i++) {
+            int coin = coins[i-1];
             for (int j=1; j<=sum; j++) {
-                int coin = coins[i-1];
                 int minLeaveCount = minCoinCount[i-1][j];
                 if (coin <= j) {
                     int minPickCount = minCoinCount[i][j-coin] + 1;

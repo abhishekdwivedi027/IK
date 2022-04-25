@@ -1,5 +1,6 @@
 package ds.arrays;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,13 +8,16 @@ public class RangeSum {
 
     public static void main(String[] args) {
         RangeSum rangeSum = new RangeSum();
+        int[] nums = {3, 1, 1, 5, 19, 16, 20, 16};
+        int[] range = {2, 17};
+        System.out.println("sum  " + getRangeSum(nums, range));
     }
 
     // repeated calls for range sum - precompute
     // m + (m+1) + (m+2) + ...... +  (n-1) + n
     // (1 + 2 + .... + (m-1)) + (m + (m+1) + (m+2) + ...... +  (n-1) + n) - (1 + 2 + .... + (m-1))
     // (n(n+1) - m(m-1))/2
-    // range sum == subarray sum
+    // range sum == subarray sum => suffix sum
 
     // Decrease and conquer - optimization - optimal substructure
     // globalMax[i] = max(globalMax[i-1], localMax[i])
@@ -38,12 +42,11 @@ public class RangeSum {
 
     // how many subarrays sum up to the given target (prefixSum)
     // globalCount[i] = globalCount[i-1] + localCount[i]
-    // localCount[i] = num of subarrays ending at i-1 and summing (target - nums[i]) + target == nums[i] ? 1 : 0
     // but localCount[i-1] involves target not (target - nums[i]) => no optimal substructure
     // back to question  - how many [j, i] add to target where 0 <= j <= i
     // sum(0, i) = sum(0, j-1) + sum(j, i)
     // prefixSum(i) = prefixSum(j-1) + target; because suffixSum = target
-    // prefixSum(j-1) = prefixSum - target --> for suffixSum to equal target, prefixSum has to equal sum - target --> find count
+    // prefixSum(j-1) = prefixSum - target --> how many j exist to make this true
     public int countSubarraySumEqualToTarget(int[] nums, int target) {
         if (nums == null || nums.length == 0) {
             return 0;
@@ -58,11 +61,13 @@ public class RangeSum {
         for (int i=0; i<n; i++) {
             prefixSum += nums[i];
 
+            // update total count when suffixSum == target
             int num = prefixSum - target;
             if (map.containsKey(num)) {
                 totalCount += map.get(num);
             }
 
+            // and update count of prefixSum
             int count = map.containsKey(prefixSum) ? map.get(prefixSum) : 0;
             map.put(prefixSum, ++count);
         }
@@ -97,6 +102,7 @@ public class RangeSum {
             }
 
             // first prefix is the shortest prefix
+            // subsequent prefix indices with the same sum can be ignored
             if (!map.containsKey(prefixSum)) {
                 map.put(prefixSum, totalLength);
             }
@@ -106,6 +112,7 @@ public class RangeSum {
         return maxLength;
     }
 
+    // prefixSum(j-1) = prefixSum(i) - suffixSum
     // if suffix sum has to be odd then prefix sum would depend on total sum
     // count => how many => store instances of even/odd prefixSums
     public int countSubarrayOddSum(int[] nums) {
@@ -203,5 +210,81 @@ public class RangeSum {
         }
 
         return totalCount;
+    }
+
+    /**
+     * range sum not based on index but numbers
+     * @param nums
+     * @param range
+     * @return
+     */
+    public static int getRangeSum(int[] nums, int[] range) {
+
+        if (nums == null || nums.length < 0 || range == null || range.length < 0) {
+            return 0;
+        }
+
+        Arrays.sort(nums);
+        int[] prefixSums = new int[nums.length];
+        int prefixSum = 0;
+        for (int i=0; i<nums.length; i++) {
+            int num = nums[i];
+            prefixSum += num;
+            prefixSums[i] = prefixSum;
+        }
+
+        int min = range[0];
+        // get the index of number equal to or just more than min
+        int minIndex = getLeftRangeIndex(nums, min, 0, nums.length);
+        int max = range[1];
+        // get the index of number equal to or just less than max
+        int maxIndex = getRightRangeIndex(nums, max, 0, nums.length);
+
+        return minIndex > 0 ? prefixSums[maxIndex] - prefixSums[minIndex-1] : prefixSums[maxIndex];
+    }
+
+    private static int getLeftRangeIndex(int[] nums, int num, int left, int right) {
+        // in binary search we return -1
+        // here we need index just above
+        if (left > right) {
+            return left;
+        }
+
+        int mid = left + (right - left)/2;
+
+        if (nums[mid] > num) {
+            return getLeftRangeIndex(nums, num, left, mid-1);
+        } else if (nums[mid] < num) {
+            return getLeftRangeIndex(nums, num, mid+1, right);
+        } else {
+            // for duplicates
+            if (mid-1 >= 0 && nums[mid] == nums[mid-1]) {
+                return getLeftRangeIndex(nums, num, left, mid-1);
+            }
+
+            return mid;
+        }
+    }
+
+    private static int getRightRangeIndex(int[] nums, int num, int left, int right) {
+        // in binary search we return -1
+        // here we need index just below
+        if (left > right) {
+            return right;
+        }
+
+        int mid = left + (right - left)/2;
+
+        if (nums[mid] > num) {
+            return getRightRangeIndex(nums, num, left, mid-1);
+        } else if (nums[mid] < num) {
+            return getRightRangeIndex(nums, num, mid+1, right);
+        } else {
+            // for duplicates
+            if (mid+1<=nums.length-1 && nums[mid] == nums[mid+1]) {
+                return getLeftRangeIndex(nums, num, mid+1, right);
+            }
+            return mid;
+        }
     }
 }

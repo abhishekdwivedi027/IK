@@ -149,6 +149,8 @@ public class Graph {
         List<Integer> neighbors = adjacencyList.get(node);
         for (Integer neighbor: neighbors) {
             if (visited[neighbor] != -1) { // trees edge
+                // not in DFS
+                // visited[neighbor] = 1;
                 parents[neighbor] = node;
                 dfs(neighbor);
             } else {

@@ -69,6 +69,7 @@ public class SlidingWindowFixed {
         for (int i=0; i<k; i++) {
             addChar(letters, s.charAt(i));
         }
+
         // if all characters are distinct then map size == window size
         if (letters.size() == k) {
             count++;
@@ -88,6 +89,7 @@ public class SlidingWindowFixed {
         return count;
     }
 
+    // add new entry - map size increases
     private void addChar(Map<Character, Integer> letters, char in) {
         if (letters.get(in) == null) {
             letters.put(in, 1);
@@ -96,6 +98,7 @@ public class SlidingWindowFixed {
         }
     }
 
+    // remove last entry - map size decreases
     private void removeChar(Map<Character, Integer> letters, char out) {
         if (letters.get(out) == 1) {
             letters.remove(out);
@@ -124,6 +127,8 @@ public class SlidingWindowFixed {
             addChar(letters1, s1.charAt(i));
             addChar(letters2, s2.charAt(i));
         }
+
+        // map equality - both keys and values
         if (letters1.equals(letters2)) {
             return true;
         }
@@ -138,6 +143,36 @@ public class SlidingWindowFixed {
         }
 
         return false;
+    }
+
+    public int maxTotalPointsFromSides(int[] cardPoints, int k) {
+        int maxPoints = 0;
+        if (cardPoints == null || cardPoints.length == 0 || k == 0) {
+            return maxPoints;
+        }
+
+        int n = cardPoints.length;
+        int m = cardPoints.length - k; // size of sliding window
+        int points = 0;
+        int totalPoints = 0;
+        int minPoints = Integer.MAX_VALUE; // maxPoints = sum - minPoints
+
+        // init
+        for (int i=0; i<m; i++) {
+            points += cardPoints[i];
+        }
+
+        minPoints = Math.min(points, minPoints);
+        totalPoints = points;
+
+        for (int i=m; i<n; i++) {
+            points -= cardPoints[i-m];
+            points += cardPoints[i];
+            minPoints = Math.min(points, minPoints);
+            totalPoints += cardPoints[i];
+        }
+
+        return totalPoints - minPoints;
     }
 
     /*
@@ -165,7 +200,7 @@ public class SlidingWindowFixed {
         for (int i=0; i<k; i++) {
             int num = nums[i];
             // don't keep unnecessary elements - smaller than num will be removed from right/tail/last
-            // ideally max and sec max will remain in the deck
+            // ideally max and (maybe) sec max will remain in the deck
             while (!deck.isEmpty() && num > deck.getLast()) {
                 deck.removeLast();
             }
@@ -178,7 +213,7 @@ public class SlidingWindowFixed {
         for (int i=k; i<n; i++) {
             int out = nums[i-k];
             // this number may or may not have been in the deck
-            // it must be the max (at the left/head/first) if it has been there
+            // it must be the max (at the left/head/first) if it has been there - not even sec max
             if (out == deck.getFirst()) {
                 deck.removeFirst();
             }
@@ -271,35 +306,5 @@ public class SlidingWindowFixed {
         } else {
             return ((float)(maxOfMinHalf + minOfMaxHalf)/2);
         }
-    }
-
-    public int maxTotalPointsFromSides(int[] cardPoints, int k) {
-        int maxPoints = 0;
-        if (cardPoints == null || cardPoints.length == 0 || k == 0) {
-            return maxPoints;
-        }
-
-        int n = cardPoints.length;
-        int m = cardPoints.length - k; // size of sliding window
-        int points = 0;
-        int totalPoints = 0;
-        int minPoints = Integer.MAX_VALUE; // maxPoints = sum - minPoints
-
-        // init
-        for (int i=0; i<m; i++) {
-            points += cardPoints[i];
-        }
-
-        minPoints = Math.min(points, minPoints);
-        totalPoints = points;
-
-        for (int i=m; i<n; i++) {
-            points -= cardPoints[i-m];
-            points += cardPoints[i];
-            minPoints = Math.min(points, minPoints);
-            totalPoints += cardPoints[i];
-        }
-
-        return totalPoints - minPoints;
     }
 }
